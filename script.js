@@ -9,43 +9,43 @@ const songs = [
 
 {
 title:"行くぜっ！怪盗少女",
-videoId:"M7lc1UVf-VE"
+videoId:"u7z9M0vFPbI"
 },
 {
 title:"サラバ、愛しき悲しみたちよ",
-videoId:"dQw4w9WgXcQ"
+videoId:"OWSbfCPkTBk"
 },
 {
 title:"労働讃歌",
-videoId:"ysz5S6PUM-U"
+videoId:"GDhFNdmVR5U"
 },
 {
 title:"猛烈宇宙交響曲・第七楽章『無限の愛』",
-videoId:"ScMzIvxBSi4"
+videoId:"TIokp4MonxE"
 },
 {
 title:"Z伝説 ～終わりなき革命～",
-videoId:"aqz-KE-bpKQ"
+videoId:"oCRlKdMnPLI"
 },
 {
 title:"Z女戦争",
-videoId:"LXb3EKWsInQ"
+videoId:"-72Lje6nwg0"
 },
 {
 title:"MOON PRIDE",
-videoId:"YE7VzlLtp-4"
+videoId:"zFfXwgjKJDQ"
 },
 {
 title:"ワニとシャンプー",
-videoId:"kXYiU_JCYtU"
+videoId:"2YWNNL2lNGQ"
 },
 {
 title:"笑一笑 ～シャオイーシャオ！～",
-videoId:"JGwWNGJdvx8"
+videoId:"CbJx788qTao"
 },
 {
 title:"クローバーとダイヤモンド",
-videoId:"RgKAFK5djSk"
+videoId:"ESGu10M49Zo"
 }
 
 ];
