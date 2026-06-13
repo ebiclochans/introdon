@@ -49,7 +49,7 @@ function createChoices(){
 
     let list=[currentSong.title];
 
-    while(list.length<4){
+    while(list.length<2){
 
         let s=songs[Math.floor(Math.random()*songs.length)];
 
