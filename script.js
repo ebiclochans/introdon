@@ -3,7 +3,6 @@ let currentSong = null;
 let stopTimer = null;
 
 let correctCount = 0;
-let totalCount = 0;
 
 let currentQuestion = 0;
 const maxQuestions = 10;
@@ -143,8 +142,8 @@ function updateScore(){
     document.getElementById("correct")
         .textContent = correctCount;
 
-    document.getElementById("total")
-        .textContent = totalCount;
+    document.getElementById("maxQuestions")
+        .textContent = maxQuestions;
 }
 
 function showChoices(){
@@ -170,8 +169,6 @@ function showChoices(){
             if(answered) return;
 
             answered = true;
-
-            totalCount++;
 
             if(song.title === currentSong.title){
 
