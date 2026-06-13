@@ -64,9 +64,22 @@ function onYouTubeIframeAPIReady(){
         width:"1",
 
         playerVars:{
-            autoplay:0,
+            autoplay:1,
             controls:0,
-            rel:0
+            rel:0,
+            playsinline:1
+        },
+
+        events:{
+            onReady:function(){
+                console.log("YouTube Ready");
+            },
+            onError:function(event){
+                console.log(
+                    "YouTube Error:",
+                    event.data
+                );
+            }
         }
 
     });
@@ -290,20 +303,54 @@ function playIntro(){
 
     if(player && currentSong){
 
-        const startTime =
-            Math.floor(Math.random()*30);
+    const startTime =
+        Math.floor(Math.random()*30);
+
+    try{
 
         player.loadVideoById({
-            videoId:currentSong.videoId,
-            startSeconds:startTime
+            videoId: currentSong.videoId,
+            startSeconds: startTime
         });
+
+        setTimeout(()=>{
+
+            try{
+
+                player.playVideo();
+
+                console.log(
+                    "再生:",
+                    currentSong.title
+                );
+
+            }catch(err){
+
+                console.log(
+                    "playVideo失敗",
+                    err
+                );
+            }
+
+        },500);
 
         clearTimeout(stopTimer);
 
         stopTimer =
             setTimeout(()=>{
-                player.pauseVideo();
+
+                try{
+                    player.pauseVideo();
+                }catch(e){}
+
             },5000);
+
+    }catch(err){
+
+        console.log(
+            "loadVideo失敗",
+            err
+        );
     }
 }
 
