@@ -5,6 +5,12 @@ let stopTimer = null;
 let correctCount = 0;
 let totalCount = 0;
 
+let currentQuestion = 0;
+const maxQuestions = 10;
+
+let answered = false;
+let usedSongs = [];
+
 const songs = [
 
 {
@@ -52,55 +58,59 @@ videoId:"ESGu10M49Zo"
 
 function onYouTubeIframeAPIReady(){
 
-    try{
+    player = new YT.Player("player",{
 
-        player = new YT.Player("player",{
+        height:"1",
+        width:"1",
 
-            height:"390",
-            width:"640",
+        playerVars:{
+            autoplay:0,
+            controls:0,
+            rel:0,
+            origin:window.location.origin
+        }
 
-            playerVars:{
-                autoplay:0,
-                controls:1,
-                rel:0,
-                origin:window.location.origin
-            },
-
-            events:{
-                onError:function(e){
-                    console.log("YouTube Error", e.data);
-                }
-            }
-
-        });
-
-    }catch(err){
-
-        console.log(err);
-
-    }
+    });
 
 }
 
-function getRandomSong(){
+function getUnusedSong(){
 
-    return songs[
-        Math.floor(Math.random()*songs.length)
-    ];
+    const remainingSongs =
+        songs.filter(
+            song => !usedSongs.includes(song.title)
+        );
 
+    if(remainingSongs.length === 0){
+        return null;
+    }
+
+    const song =
+        remainingSongs[
+            Math.floor(
+                Math.random() * remainingSongs.length
+            )
+        ];
+
+    usedSongs.push(song.title);
+
+    return song;
 }
 
 function generateChoices(correctSong){
 
-    let choices=[correctSong];
+    let choices = [correctSong];
 
-    while(choices.length<4){
+    while(choices.length < 4){
 
-        const randomSong=getRandomSong();
+        const randomSong =
+            songs[
+                Math.floor(Math.random()*songs.length)
+            ];
 
         if(
             !choices.find(
-                song=>song.title===randomSong.title
+                s => s.title === randomSong.title
             )
         ){
             choices.push(randomSong);
@@ -110,6 +120,15 @@ function generateChoices(correctSong){
     return choices.sort(
         ()=>Math.random()-0.5
     );
+}
+
+function updateScore(){
+
+    document.getElementById("correct")
+        .textContent = correctCount;
+
+    document.getElementById("total")
+        .textContent = totalCount;
 }
 
 function showChoices(){
@@ -128,10 +147,15 @@ function showChoices(){
             document.createElement("button");
 
         btn.className = "choice-btn";
-
         btn.textContent = song.title;
 
         btn.onclick = ()=>{
+
+            if(answered){
+                return;
+            }
+
+            answered = true;
 
             totalCount++;
 
@@ -139,30 +163,48 @@ function showChoices(){
 
                 correctCount++;
 
+                btn.style.backgroundColor =
+                    "#4caf50";
+
                 document.getElementById("result")
-                .textContent = "⭕ 正解！";
+                    .textContent =
+                    "⭕ 正解！";
 
             }else{
 
+                btn.style.backgroundColor =
+                    "#f44336";
+
                 document.getElementById("result")
-                .textContent =
-                "❌ 不正解！ 正解は「"
-                + currentSong.title +
-                "」";
+                    .textContent =
+                    "❌ 不正解！ 正解は「"
+                    + currentSong.title +
+                    "」";
+
+                document
+                    .querySelectorAll(".choice-btn")
+                    .forEach(button=>{
+
+                        if(
+                            button.textContent ===
+                            currentSong.title
+                        ){
+                            button.style.backgroundColor =
+                                "#4caf50";
+                        }
+                    });
             }
 
-            document.getElementById("correct")
-            .textContent = correctCount;
-
-            document.getElementById("total")
-            .textContent = totalCount;
+            updateScore();
 
             document
-            .querySelectorAll(".choice-btn")
-            .forEach(btn=>{
-                btn.disabled=true;
-            });
+                .querySelectorAll(".choice-btn")
+                .forEach(button=>{
+                    button.disabled = true;
+                });
 
+            document.getElementById("nextBtn")
+                .disabled = false;
         };
 
         container.appendChild(btn);
@@ -171,44 +213,89 @@ function showChoices(){
 
 }
 
-function playIntro(){
+function showFinalResult(){
 
-    currentSong = getRandomSong();
+    let rank = "";
 
-    document.getElementById("result")
-    .textContent = "";
+    const percent =
+        Math.round(
+            correctCount/maxQuestions*100
+        );
 
-    // 先に4択を表示
-    showChoices();
+    if(percent === 100){
 
-    if(player){
+        rank = "🏆 ももクロ神";
 
-        try{
+    }else if(percent >= 80){
 
-            const startTime =
-                Math.floor(Math.random()*30);
+        rank = "🥇 上級モノノフ";
 
-            player.loadVideoById({
-                videoId:currentSong.videoId,
-                startSeconds:startTime
-            });
+    }else if(percent >= 60){
 
-            clearTimeout(stopTimer);
+        rank = "🥈 中級モノノフ";
 
-            stopTimer=setTimeout(()=>{
+    }else{
 
-                player.pauseVideo();
-
-            },5000);
-
-        }catch(err){
-
-            console.log(err);
-
-        }
-
+        rank = "🥉 修行中";
     }
 
+    document.querySelector(".container")
+        .innerHTML = `
+        <h1>ゲーム終了！</h1>
+
+        <h2>${correctCount} / ${maxQuestions} 正解</h2>
+
+        <h2>${rank}</h2>
+
+        <button onclick="location.reload()">
+            もう一度遊ぶ
+        </button>
+    `;
+}
+
+function playIntro(){
+
+    if(currentQuestion >= maxQuestions){
+
+        showFinalResult();
+        return;
+    }
+
+    answered = false;
+
+    document.getElementById("nextBtn")
+        .disabled = true;
+
+    currentQuestion++;
+
+    document.getElementById(
+        "questionCounter"
+    ).textContent =
+    `問題 ${currentQuestion} / ${maxQuestions}`;
+
+    currentSong = getUnusedSong();
+
+    document.getElementById("result")
+        .textContent = "";
+
+    showChoices();
+
+    if(player && currentSong){
+
+        const startTime =
+            Math.floor(Math.random()*30);
+
+        player.loadVideoById({
+            videoId:currentSong.videoId,
+            startSeconds:startTime
+        });
+
+        clearTimeout(stopTimer);
+
+        stopTimer = setTimeout(()=>{
+            player.pauseVideo();
+        },5000);
+    }
 }
 
 document
@@ -218,3 +305,5 @@ document
 document
 .getElementById("nextBtn")
 .addEventListener("click",playIntro);
+
+updateScore();
