@@ -1,19 +1,11 @@
 const songs = [
     {
         title:"ムネモシュネ",
-        videoId:"https://www.youtube.com/watch?v=yrdS158FgbU"
+        videoId:"yrdS158FgbU"
     },
     {
         title:"MOON PRIDE",
-        videoId:"https://www.youtube.com/watch?v=zFfXwgjKJDQ"
-    },
-    {
-        title:"曲名3",
-        videoId:"動画ID3"
-    },
-    {
-        title:"曲名4",
-        videoId:"動画ID4"
+        videoId:"zFfXwgjKJDQ"
     }
 ];
 
