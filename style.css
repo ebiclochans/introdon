@@ -16,11 +16,13 @@ h1{
     margin:auto;
 }
 
+/* YouTubeプレイヤーは画面外へ */
 #player{
-    width:1px;
-    height:1px;
-    opacity:0;
-    overflow:hidden;
+    position:absolute;
+    top:-9999px;
+    left:-9999px;
+    width:200px;
+    height:200px;
 }
 
 button{
@@ -44,12 +46,12 @@ button:disabled{
 
 #startBtn{
     background:#ff4da6;
-    color:white;
+    color:#fff;
 }
 
 #nextBtn{
     background:#4caf50;
-    color:white;
+    color:#fff;
 }
 
 #questionCounter{
@@ -73,7 +75,7 @@ button:disabled{
     border-radius:8px;
     cursor:pointer;
     background:#333;
-    color:white;
+    color:#fff;
     transition:0.2s;
 }
 
@@ -100,4 +102,29 @@ button:disabled{
 
 h2{
     margin-top:20px;
+}
+
+/* スマホ対応 */
+@media(max-width:700px){
+
+    .choices{
+        grid-template-columns:1fr;
+    }
+
+    button{
+        width:100%;
+        margin:6px 0;
+    }
+
+    .choice-btn{
+        font-size:16px;
+    }
+
+    #result{
+        font-size:22px;
+    }
+
+    #score{
+        font-size:20px;
+    }
 }
