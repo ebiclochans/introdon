@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Error153対策 -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
-
-    <title>ももクロ イントロドン</title>
-
+    <title>ももクロ イントロドン！</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,11 +17,18 @@
 
     <div class="buttons">
         <button id="startBtn">スタート</button>
-        <button id="answerBtn">答えを見る</button>
         <button id="nextBtn">次の曲</button>
     </div>
 
-    <div id="answer"></div>
+    <div id="choices" class="choices"></div>
+
+    <div id="result"></div>
+
+    <div id="score">
+        正解数: <span id="correct">0</span>
+        /
+        <span id="total">0</span>
+    </div>
 
 </div>
 

@@ -2,89 +2,136 @@ let player;
 let currentSong = null;
 let stopTimer = null;
 
+let correctCount = 0;
+let totalCount = 0;
+
 const songs = [
 
     {
         title: "行くぜっ！怪盗少女",
-        videoId: "XN4RSUj15TE"
+        videoId: "wK0H4mqR0jM"
     },
 
     {
         title: "サラバ、愛しき悲しみたちよ",
-        videoId: "XN4RSUj15TE"
+        videoId: "bKRY0hJ2mjQ"
     },
 
     {
         title: "労働讃歌",
-        videoId: "XN4RSUj15TE"
+        videoId: "Y2V6yjjPbX0"
+    },
+
+    {
+        title: "猛烈宇宙交響曲・第七楽章『無限の愛』",
+        videoId: "TiAMM4Z4Dqg"
     }
 
 ];
 
-function onYouTubeIframeAPIReady() {
+function onYouTubeIframeAPIReady(){
 
-    player = new YT.Player("player", {
+    player = new YT.Player("player",{
 
-        height: "390",
-        width: "640",
+        height:"390",
+        width:"640",
 
-        playerVars: {
-            autoplay: 0,
-            controls: 1,
-            rel: 0,
-            origin: window.location.origin
+        playerVars:{
+            autoplay:0,
+            controls:1,
+            rel:0,
+            origin:window.location.origin
         },
 
-        events: {
-            onReady: onPlayerReady,
-            onError: onPlayerError
+        events:{
+            onError:onPlayerError
         }
+
     });
 }
 
-function onPlayerReady() {
-    console.log("YouTube Ready");
-}
-
-function onPlayerError(event) {
-
+function onPlayerError(event){
     console.error("YouTube Error:", event.data);
-
-    let message = "YouTubeエラー: " + event.data;
-
-    switch(event.data){
-
-        case 100:
-            message += "\n動画が削除または非公開";
-            break;
-
-        case 101:
-        case 150:
-            message += "\n埋め込み禁止動画";
-            break;
-
-        case 153:
-            message += "\nReferrer/Originエラー";
-            break;
-    }
-
-    alert(message);
 }
 
-function randomSong() {
+function randomSong(){
 
     currentSong =
-        songs[Math.floor(Math.random() * songs.length)];
+        songs[Math.floor(Math.random()*songs.length)];
 
-    document.getElementById("answer").textContent = "";
+    document.getElementById("result").textContent = "";
 }
 
-function playIntro() {
+function showChoices(){
+
+    const choicesDiv =
+        document.getElementById("choices");
+
+    choicesDiv.innerHTML = "";
+
+    let options = [currentSong.title];
+
+    while(options.length < 4){
+
+        const randomSong =
+            songs[Math.floor(Math.random()*songs.length)];
+
+        if(!options.includes(randomSong.title)){
+            options.push(randomSong.title);
+        }
+    }
+
+    options.sort(() => Math.random() - 0.5);
+
+    options.forEach(title => {
+
+        const btn =
+            document.createElement("button");
+
+        btn.className = "choice-btn";
+        btn.textContent = title;
+
+        btn.onclick = () => {
+
+            totalCount++;
+
+            if(title === currentSong.title){
+
+                correctCount++;
+
+                document.getElementById("result")
+                    .textContent = "⭕ 正解！";
+
+            }else{
+
+                document.getElementById("result")
+                    .textContent =
+                    `❌ 不正解！ 正解：${currentSong.title}`;
+            }
+
+            document.getElementById("correct")
+                .textContent = correctCount;
+
+            document.getElementById("total")
+                .textContent = totalCount;
+
+            document
+                .querySelectorAll(".choice-btn")
+                .forEach(button => {
+                    button.disabled = true;
+                });
+        };
+
+        choicesDiv.appendChild(btn);
+    });
+}
+
+function playIntro(){
 
     randomSong();
 
     const startTime =
-        Math.floor(Math.random() * 60);
+        Math.floor(Math.random()*60);
 
     player.loadVideoById({
         videoId: currentSong.videoId,
@@ -96,6 +143,8 @@ function playIntro() {
     stopTimer = setTimeout(() => {
         player.pauseVideo();
     }, 5000);
+
+    showChoices();
 }
 
 document
@@ -105,14 +154,3 @@ document
 document
 .getElementById("nextBtn")
 .addEventListener("click", playIntro);
-
-document
-.getElementById("answerBtn")
-.addEventListener("click", () => {
-
-    if(currentSong){
-
-        document.getElementById("answer").textContent =
-            "答え： " + currentSong.title;
-    }
-});

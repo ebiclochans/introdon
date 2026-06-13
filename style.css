@@ -21,7 +21,7 @@ h1{
 }
 
 .buttons{
-    margin-top:20px;
+    margin:20px 0;
 }
 
 button{
@@ -38,19 +38,34 @@ button{
     color:white;
 }
 
-#answerBtn{
-    background:#2196f3;
-    color:white;
-}
-
 #nextBtn{
     background:#4caf50;
     color:white;
 }
 
-#answer{
+.choices{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:20px;
+}
+
+.choice-btn{
+    padding:15px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+#result{
     margin-top:20px;
     font-size:28px;
-    color:gold;
     font-weight:bold;
+}
+
+#score{
+    margin-top:20px;
+    font-size:22px;
+    color:gold;
 }
