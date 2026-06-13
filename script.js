@@ -1,4 +1,4 @@
-let player;
+let player = null;
 let currentSong = null;
 let stopTimer = null;
 
@@ -52,20 +52,42 @@ videoId:"RgKAFK5djSk"
 
 function onYouTubeIframeAPIReady(){
 
-    player = new YT.Player("player",{
-        height:"390",
-        width:"640",
-        playerVars:{
-            autoplay:0,
-            controls:1,
-            rel:0,
-            origin:window.location.origin
-        }
-    });
+    try{
+
+        player = new YT.Player("player",{
+
+            height:"390",
+            width:"640",
+
+            playerVars:{
+                autoplay:0,
+                controls:1,
+                rel:0,
+                origin:window.location.origin
+            },
+
+            events:{
+                onError:function(e){
+                    console.log("YouTube Error", e.data);
+                }
+            }
+
+        });
+
+    }catch(err){
+
+        console.log(err);
+
+    }
+
 }
 
 function getRandomSong(){
-    return songs[Math.floor(Math.random()*songs.length)];
+
+    return songs[
+        Math.floor(Math.random()*songs.length)
+    ];
+
 }
 
 function generateChoices(correctSong){
@@ -74,32 +96,42 @@ function generateChoices(correctSong){
 
     while(choices.length<4){
 
-        let randomSong=getRandomSong();
+        const randomSong=getRandomSong();
 
-        if(!choices.find(song=>song.title===randomSong.title)){
+        if(
+            !choices.find(
+                song=>song.title===randomSong.title
+            )
+        ){
             choices.push(randomSong);
         }
     }
 
-    return choices.sort(()=>Math.random()-0.5);
+    return choices.sort(
+        ()=>Math.random()-0.5
+    );
 }
 
 function showChoices(){
 
-    const container=document.getElementById("choices");
+    const container =
+        document.getElementById("choices");
 
-    container.innerHTML="";
+    container.innerHTML = "";
 
-    const choices=generateChoices(currentSong);
+    const choices =
+        generateChoices(currentSong);
 
     choices.forEach(song=>{
 
-        const btn=document.createElement("button");
+        const btn =
+            document.createElement("button");
 
-        btn.className="choice-btn";
-        btn.textContent=song.title;
+        btn.className = "choice-btn";
 
-        btn.onclick=()=>{
+        btn.textContent = song.title;
+
+        btn.onclick = ()=>{
 
             totalCount++;
 
@@ -107,24 +139,29 @@ function showChoices(){
 
                 correctCount++;
 
-                document.getElementById("result").textContent=
-                "⭕ 正解！";
+                document.getElementById("result")
+                .textContent = "⭕ 正解！";
 
             }else{
 
-                document.getElementById("result").textContent=
-                "❌ 不正解！ 正解は「"+currentSong.title+"」";
+                document.getElementById("result")
+                .textContent =
+                "❌ 不正解！ 正解は「"
+                + currentSong.title +
+                "」";
             }
 
-            document.getElementById("correct").textContent=
-            correctCount;
+            document.getElementById("correct")
+            .textContent = correctCount;
 
-            document.getElementById("total").textContent=
-            totalCount;
+            document.getElementById("total")
+            .textContent = totalCount;
 
             document
             .querySelectorAll(".choice-btn")
-            .forEach(btn=>btn.disabled=true);
+            .forEach(btn=>{
+                btn.disabled=true;
+            });
 
         };
 
@@ -136,24 +173,42 @@ function showChoices(){
 
 function playIntro(){
 
-    currentSong=getRandomSong();
+    currentSong = getRandomSong();
 
-    document.getElementById("result").textContent="";
+    document.getElementById("result")
+    .textContent = "";
 
-    let startTime=Math.floor(Math.random()*30);
-
-    player.loadVideoById({
-        videoId:currentSong.videoId,
-        startSeconds:startTime
-    });
-
-    clearTimeout(stopTimer);
-
-    stopTimer=setTimeout(()=>{
-        player.pauseVideo();
-    },5000);
-
+    // 先に4択を表示
     showChoices();
+
+    if(player){
+
+        try{
+
+            const startTime =
+                Math.floor(Math.random()*30);
+
+            player.loadVideoById({
+                videoId:currentSong.videoId,
+                startSeconds:startTime
+            });
+
+            clearTimeout(stopTimer);
+
+            stopTimer=setTimeout(()=>{
+
+                player.pauseVideo();
+
+            },5000);
+
+        }catch(err){
+
+            console.log(err);
+
+        }
+
+    }
+
 }
 
 document
