@@ -66,8 +66,7 @@ function onYouTubeIframeAPIReady(){
         playerVars:{
             autoplay:0,
             controls:0,
-            rel:0,
-            origin:window.location.origin
+            rel:0
         }
 
     });
@@ -77,8 +76,8 @@ function onYouTubeIframeAPIReady(){
 function getUnusedSong(){
 
     const remainingSongs =
-        songs.filter(
-            song => !usedSongs.includes(song.title)
+        songs.filter(song =>
+            !usedSongs.includes(song.title)
         );
 
     if(remainingSongs.length === 0){
@@ -88,7 +87,8 @@ function getUnusedSong(){
     const song =
         remainingSongs[
             Math.floor(
-                Math.random() * remainingSongs.length
+                Math.random() *
+                remainingSongs.length
             )
         ];
 
@@ -99,17 +99,20 @@ function getUnusedSong(){
 
 function generateChoices(correctSong){
 
-    let choices = [correctSong];
+    const choices = [correctSong];
 
     while(choices.length < 4){
 
         const randomSong =
             songs[
-                Math.floor(Math.random()*songs.length)
+                Math.floor(
+                    Math.random() *
+                    songs.length
+                )
             ];
 
         if(
-            !choices.find(
+            !choices.some(
                 s => s.title === randomSong.title
             )
         ){
@@ -118,7 +121,7 @@ function generateChoices(correctSong){
     }
 
     return choices.sort(
-        ()=>Math.random()-0.5
+        () => Math.random() - 0.5
     );
 }
 
@@ -149,17 +152,15 @@ function showChoices(){
         btn.className = "choice-btn";
         btn.textContent = song.title;
 
-        btn.onclick = ()=>{
+        btn.onclick = () => {
 
-            if(answered){
-                return;
-            }
+            if(answered) return;
 
             answered = true;
 
             totalCount++;
 
-            if(song.title===currentSong.title){
+            if(song.title === currentSong.title){
 
                 correctCount++;
 
@@ -182,35 +183,44 @@ function showChoices(){
                     "」";
 
                 document
-                    .querySelectorAll(".choice-btn")
-                    .forEach(button=>{
+                .querySelectorAll(".choice-btn")
+                .forEach(button=>{
 
-                        if(
-                            button.textContent ===
-                            currentSong.title
-                        ){
-                            button.style.backgroundColor =
-                                "#4caf50";
-                        }
-                    });
+                    if(
+                        button.textContent ===
+                        currentSong.title
+                    ){
+                        button.style.backgroundColor =
+                            "#4caf50";
+                    }
+                });
             }
 
             updateScore();
 
             document
-                .querySelectorAll(".choice-btn")
-                .forEach(button=>{
-                    button.disabled = true;
-                });
+            .querySelectorAll(".choice-btn")
+            .forEach(button=>{
+                button.disabled = true;
+            });
 
-            document.getElementById("nextBtn")
+            if(currentQuestion >= maxQuestions){
+
+                setTimeout(
+                    showFinalResult,
+                    1500
+                );
+
+            }else{
+
+                document
+                .getElementById("nextBtn")
                 .disabled = false;
+            }
         };
 
         container.appendChild(btn);
-
     });
-
 }
 
 function showFinalResult(){
@@ -219,7 +229,8 @@ function showFinalResult(){
 
     const percent =
         Math.round(
-            correctCount/maxQuestions*100
+            correctCount /
+            maxQuestions * 100
         );
 
     if(percent === 100){
@@ -242,11 +253,8 @@ function showFinalResult(){
     document.querySelector(".container")
         .innerHTML = `
         <h1>ゲーム終了！</h1>
-
         <h2>${correctCount} / ${maxQuestions} 正解</h2>
-
         <h2>${rank}</h2>
-
         <button onclick="location.reload()">
             もう一度遊ぶ
         </button>
@@ -256,27 +264,27 @@ function showFinalResult(){
 function playIntro(){
 
     if(currentQuestion >= maxQuestions){
-
-        showFinalResult();
         return;
     }
 
     answered = false;
 
-    document.getElementById("nextBtn")
-        .disabled = true;
+    document
+    .getElementById("nextBtn")
+    .disabled = true;
 
     currentQuestion++;
 
-    document.getElementById(
-        "questionCounter"
-    ).textContent =
+    document
+    .getElementById("questionCounter")
+    .textContent =
     `問題 ${currentQuestion} / ${maxQuestions}`;
 
     currentSong = getUnusedSong();
 
-    document.getElementById("result")
-        .textContent = "";
+    document
+    .getElementById("result")
+    .textContent = "";
 
     showChoices();
 
@@ -292,9 +300,10 @@ function playIntro(){
 
         clearTimeout(stopTimer);
 
-        stopTimer = setTimeout(()=>{
-            player.pauseVideo();
-        },5000);
+        stopTimer =
+            setTimeout(()=>{
+                player.pauseVideo();
+            },5000);
     }
 }
 

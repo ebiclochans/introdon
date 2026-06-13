@@ -16,6 +16,14 @@ h1{
     margin:auto;
 }
 
+/* YouTubeプレイヤーを隠す */
+#player{
+    position:absolute;
+    left:-9999px;
+    width:1px;
+    height:1px;
+}
+
 button{
     padding:12px 24px;
     margin:10px;
@@ -23,6 +31,16 @@ button{
     border:none;
     border-radius:8px;
     cursor:pointer;
+    transition:0.2s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+button:disabled{
+    opacity:0.6;
+    cursor:not-allowed;
 }
 
 #startBtn{
@@ -33,6 +51,13 @@ button{
 #nextBtn{
     background:#4caf50;
     color:white;
+}
+
+#questionCounter{
+    margin-top:20px;
+    font-size:24px;
+    font-weight:bold;
+    color:#00e5ff;
 }
 
 .choices{
@@ -48,20 +73,32 @@ button{
     border:none;
     border-radius:8px;
     cursor:pointer;
+    background:#333;
+    color:white;
+    transition:0.2s;
 }
 
-.choice-btn:hover{
-    transform:scale(1.02);
+.choice-btn:hover:not(:disabled){
+    background:#555;
+}
+
+.choice-btn:disabled{
+    opacity:1;
 }
 
 #result{
     margin-top:20px;
     font-size:28px;
     font-weight:bold;
+    min-height:40px;
 }
 
 #score{
     margin-top:20px;
     color:gold;
     font-size:24px;
+}
+
+h2{
+    margin-top:20px;
 }
