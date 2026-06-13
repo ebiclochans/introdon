@@ -7,150 +7,159 @@ let totalCount = 0;
 
 const songs = [
 
-    {
-        title: "行くぜっ！怪盗少女",
-        videoId: "wK0H4mqR0jM"
-    },
-
-    {
-        title: "サラバ、愛しき悲しみたちよ",
-        videoId: "bKRY0hJ2mjQ"
-    },
-
-    {
-        title: "労働讃歌",
-        videoId: "Y2V6yjjPbX0"
-    },
-
-    {
-        title: "猛烈宇宙交響曲・第七楽章『無限の愛』",
-        videoId: "TiAMM4Z4Dqg"
-    }
+{
+title:"行くぜっ！怪盗少女",
+videoId:"M7lc1UVf-VE"
+},
+{
+title:"サラバ、愛しき悲しみたちよ",
+videoId:"dQw4w9WgXcQ"
+},
+{
+title:"労働讃歌",
+videoId:"ysz5S6PUM-U"
+},
+{
+title:"猛烈宇宙交響曲・第七楽章『無限の愛』",
+videoId:"ScMzIvxBSi4"
+},
+{
+title:"Z伝説 ～終わりなき革命～",
+videoId:"aqz-KE-bpKQ"
+},
+{
+title:"Z女戦争",
+videoId:"LXb3EKWsInQ"
+},
+{
+title:"MOON PRIDE",
+videoId:"YE7VzlLtp-4"
+},
+{
+title:"ワニとシャンプー",
+videoId:"kXYiU_JCYtU"
+},
+{
+title:"笑一笑 ～シャオイーシャオ！～",
+videoId:"JGwWNGJdvx8"
+},
+{
+title:"クローバーとダイヤモンド",
+videoId:"RgKAFK5djSk"
+}
 
 ];
 
 function onYouTubeIframeAPIReady(){
 
     player = new YT.Player("player",{
-
         height:"390",
         width:"640",
-
         playerVars:{
             autoplay:0,
             controls:1,
             rel:0,
             origin:window.location.origin
-        },
-
-        events:{
-            onError:onPlayerError
         }
-
     });
 }
 
-function onPlayerError(event){
-    console.error("YouTube Error:", event.data);
+function getRandomSong(){
+    return songs[Math.floor(Math.random()*songs.length)];
 }
 
-function randomSong(){
+function generateChoices(correctSong){
 
-    currentSong =
-        songs[Math.floor(Math.random()*songs.length)];
+    let choices=[correctSong];
 
-    document.getElementById("result").textContent = "";
+    while(choices.length<4){
+
+        let randomSong=getRandomSong();
+
+        if(!choices.find(song=>song.title===randomSong.title)){
+            choices.push(randomSong);
+        }
+    }
+
+    return choices.sort(()=>Math.random()-0.5);
 }
 
 function showChoices(){
 
-    const choicesDiv =
-        document.getElementById("choices");
+    const container=document.getElementById("choices");
 
-    choicesDiv.innerHTML = "";
+    container.innerHTML="";
 
-    let options = [currentSong.title];
+    const choices=generateChoices(currentSong);
 
-    while(options.length < 4){
+    choices.forEach(song=>{
 
-        const randomSong =
-            songs[Math.floor(Math.random()*songs.length)];
+        const btn=document.createElement("button");
 
-        if(!options.includes(randomSong.title)){
-            options.push(randomSong.title);
-        }
-    }
+        btn.className="choice-btn";
+        btn.textContent=song.title;
 
-    options.sort(() => Math.random() - 0.5);
-
-    options.forEach(title => {
-
-        const btn =
-            document.createElement("button");
-
-        btn.className = "choice-btn";
-        btn.textContent = title;
-
-        btn.onclick = () => {
+        btn.onclick=()=>{
 
             totalCount++;
 
-            if(title === currentSong.title){
+            if(song.title===currentSong.title){
 
                 correctCount++;
 
-                document.getElementById("result")
-                    .textContent = "⭕ 正解！";
+                document.getElementById("result").textContent=
+                "⭕ 正解！";
 
             }else{
 
-                document.getElementById("result")
-                    .textContent =
-                    `❌ 不正解！ 正解：${currentSong.title}`;
+                document.getElementById("result").textContent=
+                "❌ 不正解！ 正解は「"+currentSong.title+"」";
             }
 
-            document.getElementById("correct")
-                .textContent = correctCount;
+            document.getElementById("correct").textContent=
+            correctCount;
 
-            document.getElementById("total")
-                .textContent = totalCount;
+            document.getElementById("total").textContent=
+            totalCount;
 
             document
-                .querySelectorAll(".choice-btn")
-                .forEach(button => {
-                    button.disabled = true;
-                });
+            .querySelectorAll(".choice-btn")
+            .forEach(btn=>btn.disabled=true);
+
         };
 
-        choicesDiv.appendChild(btn);
+        container.appendChild(btn);
+
     });
+
 }
 
 function playIntro(){
 
-    randomSong();
+    currentSong=getRandomSong();
 
-    const startTime =
-        Math.floor(Math.random()*60);
+    document.getElementById("result").textContent="";
+
+    let startTime=Math.floor(Math.random()*30);
 
     player.loadVideoById({
-        videoId: currentSong.videoId,
-        startSeconds: startTime
+        videoId:currentSong.videoId,
+        startSeconds:startTime
     });
 
     clearTimeout(stopTimer);
 
-    stopTimer = setTimeout(() => {
+    stopTimer=setTimeout(()=>{
         player.pauseVideo();
-    }, 5000);
+    },5000);
 
     showChoices();
 }
 
 document
 .getElementById("startBtn")
-.addEventListener("click", playIntro);
+.addEventListener("click",playIntro);
 
 document
 .getElementById("nextBtn")
-.addEventListener("click", playIntro);
+.addEventListener("click",playIntro);

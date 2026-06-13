@@ -1,10 +1,10 @@
 body{
-    margin:0;
-    padding:20px;
     background:#111;
     color:#fff;
-    text-align:center;
     font-family:sans-serif;
+    text-align:center;
+    margin:0;
+    padding:20px;
 }
 
 h1{
@@ -16,21 +16,13 @@ h1{
     margin:auto;
 }
 
-#player{
-    margin:20px auto;
-}
-
-.buttons{
-    margin:20px 0;
-}
-
 button{
     padding:12px 24px;
-    margin:5px;
+    margin:10px;
+    font-size:18px;
     border:none;
     border-radius:8px;
     cursor:pointer;
-    font-size:18px;
 }
 
 #startBtn{
@@ -44,10 +36,10 @@ button{
 }
 
 .choices{
+    margin-top:20px;
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
-    margin-top:20px;
 }
 
 .choice-btn{
@@ -58,6 +50,10 @@ button{
     cursor:pointer;
 }
 
+.choice-btn:hover{
+    transform:scale(1.02);
+}
+
 #result{
     margin-top:20px;
     font-size:28px;
@@ -66,6 +62,6 @@ button{
 
 #score{
     margin-top:20px;
-    font-size:22px;
     color:gold;
+    font-size:24px;
 }
