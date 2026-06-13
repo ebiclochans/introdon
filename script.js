@@ -1,101 +1,118 @@
+let player;
+let currentSong = null;
+let stopTimer = null;
+
 const songs = [
+
     {
-        title:"ムネモシュネ",
-        videoId:"yrdS158FgbU"
+        title: "行くぜっ！怪盗少女",
+        videoId: "XN4RSUj15TE"
     },
+
     {
-        title:"MOON PRIDE",
-        videoId:"zFfXwgjKJDQ"
+        title: "サラバ、愛しき悲しみたちよ",
+        videoId: "XN4RSUj15TE"
+    },
+
+    {
+        title: "労働讃歌",
+        videoId: "XN4RSUj15TE"
     }
+
 ];
 
-let player;
-let currentSong;
+function onYouTubeIframeAPIReady() {
 
-let correct=0;
-let total=0;
+    player = new YT.Player("player", {
 
-function onYouTubeIframeAPIReady(){
+        height: "390",
+        width: "640",
 
-    player=new YT.Player("player",{
-        height:"0",
-        width:"0"
-    });
+        playerVars: {
+            autoplay: 0,
+            controls: 1,
+            rel: 0,
+            origin: window.location.origin
+        },
 
-}
-
-document.getElementById("startBtn").onclick=nextQuestion;
-
-function nextQuestion(){
-
-    total++;
-
-    document.getElementById("total").innerText=total;
-    document.getElementById("result").innerText="";
-
-    currentSong=songs[Math.floor(Math.random()*songs.length)];
-
-    player.loadVideoById(currentSong.videoId);
-
-    setTimeout(()=>{
-        player.pauseVideo();
-    },3000);
-
-    createChoices();
-
-}
-
-function createChoices(){
-
-    let list=[currentSong.title];
-
-    while(list.length<2){
-
-        let s=songs[Math.floor(Math.random()*songs.length)];
-
-        if(!list.includes(s.title)){
-            list.push(s.title);
+        events: {
+            onReady: onPlayerReady,
+            onError: onPlayerError
         }
+    });
+}
 
+function onPlayerReady() {
+    console.log("YouTube Ready");
+}
+
+function onPlayerError(event) {
+
+    console.error("YouTube Error:", event.data);
+
+    let message = "YouTubeエラー: " + event.data;
+
+    switch(event.data){
+
+        case 100:
+            message += "\n動画が削除または非公開";
+            break;
+
+        case 101:
+        case 150:
+            message += "\n埋め込み禁止動画";
+            break;
+
+        case 153:
+            message += "\nReferrer/Originエラー";
+            break;
     }
 
-    list.sort(()=>Math.random()-0.5);
+    alert(message);
+}
 
-    const area=document.getElementById("choices");
+function randomSong() {
 
-    area.innerHTML="";
+    currentSong =
+        songs[Math.floor(Math.random() * songs.length)];
 
-    list.forEach(name=>{
+    document.getElementById("answer").textContent = "";
+}
 
-        const btn=document.createElement("button");
+function playIntro() {
 
-        btn.className="choice";
+    randomSong();
 
-        btn.innerText=name;
+    const startTime =
+        Math.floor(Math.random() * 60);
 
-        btn.onclick=()=>judge(name);
-
-        area.appendChild(btn);
-
+    player.loadVideoById({
+        videoId: currentSong.videoId,
+        startSeconds: startTime
     });
 
+    clearTimeout(stopTimer);
+
+    stopTimer = setTimeout(() => {
+        player.pauseVideo();
+    }, 5000);
 }
 
-function judge(answer){
+document
+.getElementById("startBtn")
+.addEventListener("click", playIntro);
 
-    if(answer===currentSong.title){
+document
+.getElementById("nextBtn")
+.addEventListener("click", playIntro);
 
-        correct++;
+document
+.getElementById("answerBtn")
+.addEventListener("click", () => {
 
-        document.getElementById("correct").innerText=correct;
+    if(currentSong){
 
-        document.getElementById("result").innerText="⭕ 正解";
-
-    }else{
-
-        document.getElementById("result").innerText=
-        "❌ 正解は "+currentSong.title;
-
+        document.getElementById("answer").textContent =
+            "答え： " + currentSong.title;
     }
-
-}
+});

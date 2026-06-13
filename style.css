@@ -1,34 +1,56 @@
 body{
     margin:0;
-    background:#222;
-    color:white;
+    padding:20px;
+    background:#111;
+    color:#fff;
+    text-align:center;
     font-family:sans-serif;
 }
 
+h1{
+    color:#ff4da6;
+}
+
 .container{
-    max-width:600px;
+    max-width:900px;
     margin:auto;
-    padding:20px;
-    text-align:center;
+}
+
+#player{
+    margin:20px auto;
+}
+
+.buttons{
+    margin-top:20px;
 }
 
 button{
-    padding:15px 25px;
-    font-size:20px;
-    margin:10px;
+    padding:12px 24px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
     cursor:pointer;
-}
-
-.choice{
-    display:block;
-    width:100%;
-    margin:10px 0;
-    padding:15px;
     font-size:18px;
 }
 
-#result{
+#startBtn{
+    background:#ff4da6;
+    color:white;
+}
+
+#answerBtn{
+    background:#2196f3;
+    color:white;
+}
+
+#nextBtn{
+    background:#4caf50;
+    color:white;
+}
+
+#answer{
     margin-top:20px;
-    font-size:24px;
+    font-size:28px;
+    color:gold;
     font-weight:bold;
 }
